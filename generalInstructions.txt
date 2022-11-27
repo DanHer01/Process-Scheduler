@@ -1,0 +1,192 @@
+Instrucciones
+
+Process Scheduling
+
+Para este proyecto usted implementará una simulación de un Calendarizador de Procesos tal y como
+lo hacen los procesadores para atender a todos los procesos que solicitan de su servicio. La
+multiprogramación permite que varios procesos utilicen varios recursos del sistema simultáneamente.
+Esto incrementa el uso de cada recurso (por ejemplo: un proceso utiliza el CPU mientras otro
+utiliza el disco, los dos recursos estan siendo utilizados). Cuando se diseña un sistema como este,
+la dificultad se presenta cuando hay más de un proceso compitiendo por el mismo recurso. Es
+entonces donde se debe aplicar un algoritmo que decida cuál de los procesos recibirá el servicio
+primero.
+
+Generalmente, los procesos son todos diferentes, y se diferencian por el tiempo que requieren el
+servicio, y/o alguna prioridad. Existen políticas de calendarización que toman en cuenta estas
+características para decidir qué proceso es el que debe ser atendido primero. A continuación le
+explicaremos algunas de las políticas para process scheduling:
+
+•	First-Come First-Served (FCFS): El proceso que llega de primero, es el primero en ser atendido.
+•	Last-Come First-Served (LCFS): El proceso que llega de último es atendido primero.
+•	Priority Policy (PP): El proceso que tiene mayor prioridad es el que se atiende de primero.
+•	Round-Robin (RR): Se define una unidad de tiempo fija llamada quantum. Cada proceso se atiende
+	esa unidad de tiempo, en una forma FCFS, y si no alcanza ese tiempo para concluir el requerimiento
+	del proceso, el proceso pasa a la cola a esperar su turno otra vez. Entonces, el tiempo que requiere
+	el proceso, es dividido en quanta (plural de quantum) y eso sería el total de veces que tendría que
+	hacer cola. Cuando su tiempo requerido acaba, sale de la cola definitivamente.
+
+En general:
+¿Qué es lo que tiene que hacer en su proyecto? Implementar la simulación del funcionamiento de un
+Calendarizador de Procesos. Su calendarizador debe implemetar simulación para las cuatro políticas
+descritas anteriormente:
+
+•	First Come First Served
+•	Last Come First Served
+•	Round Robin
+•	Priority Policy
+
+utilizando solo una cola de atención y una cantidad definida de procesadores.
+
+Especificaciones:
+La política en que se manejarán los procesos y la cantidad de procesadores, serán escogidos por el
+usuario al momento de ejecutar el programa. Por cada ejecución solo se podra correr la simulación
+de una política a la vez (más adelante se mostrará como elige el usuario dicha política). Ya
+escogida la política y la cantidad de procesadores, su programa debe empezar la simulación de
+ingreso y atención de procesos.
+
+Cada proceso debe guardar un número de id (código) y un tiempo de servicio en segundos o milisegundos
+(como le funcione a ud mejor). Este tiempo está definido dependiendo el tipo de proceso que sea. En
+este proyecto manejaremos cuatro tipos de proceso: Aritmético, de Input/Output, condicional e
+iterativo. Los tiempos serán definidos al momento de mandar a ejecutar el programa, y serán fijos para
+todos los procesos del mismo tipo. Ejemplo: Todos los procesos Aritméticos duran 300 milisegundos,
+todos los de input/ouput duran 200 milisegundos, y así sucesivamente.
+
+Los procesos deben ser generados en forma aleatoria, y en tiempos aleatorios. El id de los procesos
+debe ir incrementando (no es aleatorio) con cada proceso, es decir que el primer proceso tendrá id = 1,
+el segundo id = 2, etc. Su tipo será aleatorio, es decir que se eligirá de forma aleatorea qué tipo de
+proceso es (aritmeéico, input/output. etc...). El número correlativo es compartido entre todos los
+tipos de proceso, es decir que no hay contadores separados para cada tipo.
+
+Los procesos generados aleatoriamente se posicionarán en una "cola" de servicios, esta "cola" debe ser
+implementada según la política que se haya escogido. Para el caso de Priority Policy se debe tener
+cuatro colas diferentes, una para prioridad 1, una para prioridad 2 una para prioridad 3 y otra para
+prioridad 4. Los procesos se irán metiendo en la cola correspondiente a su prioridad.
+
+Al mismo tiempo que llegan los procesos a la "cola" el "procesador" (o "procesadores") debe irlos
+atendiendo, otra vez, dependiendo de la política que se haya escogido. Cada proceso tiene su tiempo
+de servicio, y eso es lo que se debe tardar el "procesador" en atenderlos. Como esto es solo una
+simulación, el procesador solo tiene que "esperar" los milisegundos que el proceso tardaría en ser
+atendido, en vez de atenderlo en realidad. Es decir :
+
+•	Si un proceso n tiene tiempo de 1000 milisegundos entonces su procesador debería ejecutar un:
+•	  		Thread.sleep(1000);
+
+para tardarse exactamente lo que el proceso debe tardarse. La simulación de la atención al proceso es
+simplemente pausar el programa procesador por el tiempo que el proceso tenga asociado, no hay que hacer
+nada mas.
+
+Después de ser atendido, el proceso se elimina de la "cola" y se atiende el siguiente proceso. En el
+caso Priority Policy la atención de procesos es por prioridad, la prioridad está definida por los tipos
+de proceso: Se atenderán primero los de input/output, después los aritméticos, después los condicionales
+y de último los iterativos.
+
+Su proyecto debe tener la capacidad de funcionar con dos "procesadores", esto quiere decir que en la
+simulación, se pueden tener dos programas procesadores atendiendo procesos, ambos utilizando la misma
+política y la misma "cola" de procesos, pero atendiendo a los procesos paralelamente (e independiente
+uno de el otro). El número de programas procesadores que se desea tener en la simulación, será definido
+por el usuario a la hora de ejecutar el programa.
+
+Definición de sus clases:
+Las clases que se le proveen para este proyecto están el en repositorio en Github, cuya documentacion
+puede encontrar en el archivo docs.zip
+Para la definición de sus clases debe cumplir con lo siguiente:
+
+•	En este proyecto SE DEBE utilizar herencia, clases abstractas e interfaces.
+•	Debe definir cuatro tipos de proceso: ArithmeticProcess, InputOutputProcess, ConditionalProcess,
+	y LoopProcess. Se le provee una clase abstracta SimpleProcess para que todos sus tipos de procesos
+	hereden de ella (TIENE que heredar de ella). Las clases que usted defina para esto deben pertenecer
+	al paquete llamado scheduler.processing. Recuerde que los procesos además de su id, guardan un tiempo
+	de procesamiento y este es IGUAL para todos los procesos que sean del mismo tipo. El tiempo de cada
+	proceso es definido como argumento a la hora de iniciar la ejecución del programa.
+•	Tome en cuenta que para la política Round Robin, el proceso debería tener dos tiempos, el tiempo
+	total de procesamiento (que dependerá del tipo de proceso) y el tiempo que le falta para terminar de
+	ser procesado.
+•	Cada una de las clases que representen una política deben heredar de la clase abstracta Policy e
+	implementar la interfaz Enqueable incluidas en las clases proveídas para el proyecto. Todas estas
+	deben pertenecer al paquete llamado policies, el cual es subpaquete del paquete scheduler.scheduling.
+	Y las clases que las utilicen deben importar este paquete.
+•	Las clases que defina (que no sean políticas o tipos de proceso), deben pertenecer al paquete
+	scheduler, no estar metidas en un subpaquete de él. Ejemplo: las clases que representan el procesador
+	y generador de procesos.
+•	DEBE utilizar pilas y colas para guardar los procesos. NO puede utilizar arreglos o ArrayList.
+•	Las clases como estructuras de datos que se le permiten utilizar son: ConcurrentLinkedQueue como
+	cola, Stack como pila y LinkedList como lista encadenada, proveidas en Java. La estructura de
+	LinkedList solo puede ser utilizada en una política, no más. NO puede utilizar estructuras de datos
+	hechas por usted.
+•	NO puede utilizar Menús para la ejecución de políticas.
+•	La clase principal: ProcessScheduler no debe pertenecer a ningún paquete.
+
+Presentación:
+Recuerde que usted debe seguir TODAS las especificaciones del proyecto para que no se le bajen puntos
+en su calificación total del mismo. He aquí entonces las especificaciones para su presentación:
+•	Su programa se debe poder mandar a ejecutar de las siguientes formas (note que es desde la consola de comandos):
+•		
+•		java ProcessScheduler -politica(en minúsculas) rango_tiempo_ingreso arith io cond loop              o 
+•	        java ProcessScheduler -dual -politica(en minúsculas) rango_tiempo_ingreso arith io cond loop        
+
+
+En la bandera -politica debe ir -fcfs para FIRST COME FIRST SERVED, -lcfs para LAST COME FIRST SERVED, -rr para ROUND ROBIN, -pp para PRIORITY POLICY, y
+la bandera -dual significa que su calendarizador correrá con dos procesadores.
+
+Con respecto a los tiempos: rango_tiempo_ingreso es el rango de tiempos dentro del cual se elije aleatoriamente el tiempo en el que se va a ingresar
+un nuevo proceso; arith es el tiempo que duran los procesos aritmeticos; io es el tiempo que duran los procesos input/ouput; cond es el tiempo que
+duran los procesos condicionales; y loop es el tiempo que duran los procesos iterativos. Para la politica Round Robin, hay que agregar un tiempo adicional
+quantum.
+
+	java ProcessScheduler -fcfs rango_tiempo_ingreso arith io cond loop  o
+	java ProcessScheduler -lcfs rango_tiempo_ingreso arith io cond loop  o
+	java ProcessScheduler -rr   rango_tiempo_ingreso arith io cond loop  quantum  o
+	java ProcessScheduler -pp   rango_tiempo_ingreso arith io cond loop    
+	
+	Ejemplos:
+			java ProcessScheduler -fcfs  1.5-3  2 1 2.5 3     
+				
+			Significa que su Process Scheduler debe utilizar la política FIRST COME FIRST SERVED,
+			utilizando para la simulación 1 programa procesador,
+			Tiempo de entrada de procesos debe estar entre 1.5 segundos y 3 segundos
+			El tiempo de procesos aritméticos es 2 segundos
+                         El tiempo de procesos input/output es 1 segundo
+                         El tiempo de procesos condicionales es 2.5 segundos
+                         El tiempo de procesos iterativos es 3 segundos
+				
+			java ProcessScheduler -rr  1-2.5  1.5 1 3 4  0.5
+			politica: Round Robin
+			Cantidad de programas procesador: 1
+			tiempo de entrada entre 1 y 2.5 segundos
+			El tiempo de procesos aritméticos es 1.5 segundos
+                         El tiempo de procesos input/output es 1 segundo
+                         El tiempo de procesos condicionales es 3 segundos
+                         El tiempo de procesos iterativos es 4 segundos
+			y un quantum de 0.5 segundos.
+                        
+                        java ProcessScheduler -dual  -lcfs  1-2  2 2 2 2
+			politica: Last Come First Served
+			Cantidad de programas procesador: 2
+			tiempo de entrada entre 1 y 2 segundos
+			El tiempo de procesos aritméticos es 2 segundos
+                         El tiempo de procesos input/output es 2 segundos
+                         El tiempo de procesos condicionales es 2 segundos
+                         El tiempo de procesos iterativos es 2 segundos			
+Ya escogida la política, el process scheduler debe empezar el simulador e imprimir los datos correspondientes en la pantalla.
+ 
+•	Al correr la simulación, su programa debe desplegar en pantalla la siguiente información:
+o	La cola de procesos: representando cada proceso con su número, su tiempo de atención y su tipo: A si es aritmético, IO si es de input/output, C si es condicional y L si es iterativo.
+o	Todos los datos del proceso o procesos que están siendo atendidos en el momento y por qué procesador (cada procesador debe estar representado por un numero entero: procesador 1, procesador 2....)
+o	La política que se está utilizando
+o	El número de procesos ya atendidos hasta el momento.
+o	Cada vez que se dé una acción: Ingreso de proceso a la cola(s), se terminó de atender un proceso y se empieza a atender otro, se debe desplegar en pantalla toda la información: cola, procesos, etc.
+o	La información debe ser ordenada y legible.
+•	Su programa terminará si oprimimos la tecla q. (Puede ser q y ENTER). Y puede detenerse en cualquier momento de la ejecución. Al detenerse debe imprimir en la pantalla la informacion de: cuántos procesos se atendieron, cuántos procesos quedaron en cola (sin atenderse), el tiempo promedio de atención por proceso (por procesador) y la política utilizada. Para el caso de round-robin entre los procesos atendidos solo se tomará en cuenta los procesos que se terminaron de atender por completo.
+
+Estas son todas las especificaciones que necesita para realizar el proyecto.
+
+Entrega de su solución
+Su programa debe compilar y correr para poder entregarlo.
+
+Puntos Extra
+
+•	Ninguna política adicional se le tomará en cuenta.
+•	Puede implementar su proyecto en forma grafica. (Applets o JFrames)
+•	Puede implementar la documentacion de java para sus clases, que se pueda generar con javadoc (formato API)
+•	Cualquier cosa adicional (que no sea otra política) que implemente por su propia cuenta y se considere para puntos extra.
+
